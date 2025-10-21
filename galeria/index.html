@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria Digital de Artistas</title>
+    <style>
+        /* ==================== VARIÁVEIS CSS ==================== */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --accent-color: #34c759;
+            --accent-hover: #2da84c;
+            --border-color: #e5e5e7;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: #1d1d1f;
+            --bg-card: #1d1d1f;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --border-color: #424245;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ==================== RESET E BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* ==================== HEADER ==================== */
+        .header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .header__container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header__title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header__controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ==================== SEARCH E CONTROLES ==================== */
+        .search {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+        }
+
+        .search__input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .search__input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: var(--bg-card);
+        }
+
+        .search__icon {
+            position: absolute;
+            left: 0.875rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .sort-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sort-select:hover {
+            border-color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.25rem;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        /* ==================== MAIN E GRID ==================== */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* ==================== CARDS ==================== */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent-color);
+        }
+
+        .card__image-container {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            background-color: var(--bg-secondary);
+        }
+
+        .card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover .card__image {
+            transform: scale(1.05);
+        }
+
+        .card__content {
+            padding: 1.5rem;
+        }
+
+        .card__name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card__year {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card__bio {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card__button {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .card__button:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .card__button:active {
+            transform: translateY(0);
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+        }
+
+        .modal__content {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .modal.active .modal__content {
+            transform: scale(1);
+        }
+
+        .modal__close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background-color: var(--bg-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .modal__close:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal__image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .modal__body {
+            padding: 2rem;
+        }
+
+        .modal__name {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .modal__year {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal__bio {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .modal__navigation {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+
+        .modal__nav-button {
+            flex: 1;
+            padding: 0.875rem;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal__nav-button:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .modal__nav-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .modal__nav-button:disabled:hover {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state__icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state__text {
+            font-size: 1.25rem;
+        }
+
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 768px) {
+            .header__container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .header__controls {
+                flex-direction: column;
+            }
+
+            .search {
+                max-width: 100%;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .modal__content {
+                width: 95%;
+            }
+
+            .modal__image {
+                height: 300px;
+            }
+
+            .modal__body {
+                padding: 1.5rem;
+            }
+
+            .modal__name {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .gallery {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER COM CONTROLES -->
+    <header class="header">
+        <div class="header__container">
+            <h1 class="header__title">Galeria de Artistas Plásticos</h1>
+            <div class="header__controls">
+                <div class="search">
+                    <span class="search__icon">🔍</span>
+                    <input 
+                        type="text" 
+                        class="search__input" 
+                        id="searchInput" 
+                        placeholder="Buscar artista..."
+                        aria-label="Buscar artista por nome"
+                    >
+                </div>
+                <select class="sort-select" id="sortSelect" aria-label="Ordenar artistas">
+                    <option value="default">Ordem padrão</option>
+                    <option value="az">Nome (A-Z)</option>
+                    <option value="za">Nome (Z-A)</option>
+                    <option value="year-asc">Ano (Antigo-Recente)</option>
+                    <option value="year-desc">Ano (Recente-Antigo)</option>
+                </select>
+                <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro/escuro">
+                    🌙
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <section class="gallery" id="gallery" aria-label="Galeria de artistas">
+            <!-- Cards serão inseridos aqui via JavaScript -->
+        </section>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state__icon">🎨</div>
+            <p class="empty-state__text">Nenhum artista encontrado</p>
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal" role="dialog" aria-labelledby="modalName" aria-modal="true">
+        <div class="modal__content">
+            <button class="modal__close" id="modalClose" aria-label="Fechar modal">&times;</button>
+            <img src="" alt="" class="modal__image" id="modalImage" loading="lazy">
+            <div class="modal__body">
+                <h2 class="modal__name" id="modalName"></h2>
+                <p class="modal__year" id="modalYear"></p>
+                <p class="modal__bio" id="modalBio"></p>
+                <div class="modal__navigation">
+                    <button class="modal__nav-button" id="prevArtist">← Anterior</button>
+                    <button class="modal__nav-button" id="nextArtist">Próximo →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DADOS DOS ARTISTAS ====================
+        // INSTRUÇÕES: Para substituir os dados, edite o array abaixo.
+        // Substitua as URLs das imagens por suas próprias imagens.
+        // Formato: { nome, foto, shortBio, fullBio, anoNascimento }
+        
+        const artistsData = [
+            {
+                nome: "Lygia Clark ",
+                foto: "assets/lygia.png",
+                shortBio: "foi uma artista brasileira inovadora que transformou a relação entre arte e espectador, unindo criação, corpo e sensorialidade.",
+                fullBio: "Lygia Clark nasceu em 1920, em Belo Horizonte, e tornou-se uma das principais artistas do modernismo e neoconcretismo brasileiro. Estudou arte no Rio de Janeiro e em Paris, com mestres como Burle Marx e Fernand Léger. Inicialmente pintora geométrica, passou a criar obras que envolviam a participação do público. Foi uma das fundadoras do movimento neoconcreto e destacou-se com os Bichos (1960–1964), esculturas interativas de alumínio. Com Caminhando (1964), aprofundou a ideia de coautoria do espectador. Nos anos seguintes, desenvolveu experiências sensoriais e terapêuticas com “objetos relacionais”. Faleceu em 1988, deixando um legado que une arte, corpo e psicologia.",
+                anoNascimento: 1920
+            },
+            {
+                nome: "Hélio Oiticica",
+                foto: "assets/helipoo.png",
+                shortBio: "Hélio Oiticica foi um artista carioca que revolucionou a arte brasileira ao unir cor, corpo e participação do público, criando obras como os *Parangolés* e a instalação *Tropicália*, símbolo da integração entre arte e vida.",
+                fullBio: "Hélio Oiticica, nascido no Rio de Janeiro em 1937, foi um dos maiores inovadores da arte brasileira. Iniciou no Grupo Frente e logo passou a criar obras interativas, como os *Bólides* e *Parangolés*, que uniam cor, corpo e participação. Em 1967, apresentou *Tropicália*, símbolo da arte e cultura brasileiras. Morreu em 1980, deixando um legado de experimentação e liberdade artística.",
+                anoNascimento: 1937 
+            },
+            {
+                nome: "Bea",
+                foto: "assets/Bea.jpg",
+                shortBio: "Beatriz Milhazes, nascida no Rio de Janeiro em 1960, é uma das artistas brasileiras mais reconhecidas internacionalmente. Sua arte combina cores vibrantes e formas geométricas inspiradas na cultura brasileira, com obras presentes em museus como o MoMA e o Centre Pompidou.",
+                fullBio: "Beatriz Milhazes nasceu no Rio de Janeiro em 1960 e é uma das artistas brasileiras mais reconhecidas no mundo. Integrante da “Geração 80”, destacou-se por unir estrutura geométrica e cores vibrantes em obras inspiradas na cultura brasileira. Desenvolveu uma técnica única de colagem com camadas de tinta transferidas para a tela, criando composições ricas em movimento e ornamentação. Suas obras, como *O Beijo* e *Maresias*, estão em museus renomados como o MoMA e o Centre Pompidou.",
+                anoNascimento: 1960
+            },
+            {
+                nome: "Adriana Varejão",
+                foto: "assets/Varjão.png",
+                shortBio: "Adriana Varejão, nascida no Rio de Janeiro em 1964, é uma das principais artistas brasileiras contemporâneas. Sua obra explora a herança colonial, a azulejaria portuguesa e a violência histórica, combinando pintura e instalação em reflexões sobre identidade e memória.",
+                fullBio: "Adriana Varejão, nascida no Rio de Janeiro em 1964, é uma das artistas brasileiras contemporâneas mais reconhecidas. Sua obra combina pintura e instalação, explorando a história colonial, a azulejaria portuguesa e temas de violência, memória e identidade, com séries como *Azulejaria* e *Tongues and Incisions*. Suas obras já foram exibidas em museus como MoMA, Tate Modern e Musée d’Art Moderne, e incluem instalações permanentes no Instituto Inhotim.",
+                anoNascimento: 1964
+            },
+            {
+                nome: "Vik Muniz",
+                foto: "/assets/Vick.png",
+                shortBio: "Vik Muniz é um artista plástico brasileiro nascido em 1961, em São Paulo. Conhecido por criar imagens a partir de materiais inusitados, como açúcar, lixo, chocolate e arame, ele explora a relação entre arte, percepção e realidade. Suas obras já foram expostas em museus renomados, como o MoMA e o Tate Modern. Muniz também ganhou destaque internacional com o documentário *Lixo Extraordinário* (2010), que retrata seu trabalho com catadores de recicláveis no Rio de Janeiro.",
+                fullBio: "Vik Muniz é um artista plástico brasileiro nascido em 1961, em São Paulo. Conhecido por criar imagens a partir de materiais inusitados, como açúcar, lixo, chocolate e arame, ele explora a relação entre arte, percepção e realidade. Suas obras já foram expostas em museus renomados, como o MoMA e o Tate Modern. Muniz também ganhou destaque internacional com o documentário Lixo Extraordinário (2010), que retrata seu trabalho com catadores de recicláveis no Rio de Janeiro.",
+                anoNascimento: 1840
+            },
+            {
+                nome: "Cildo Meireles",
+                foto: "assets/Clido.png",
+                shortBio: "Cildo Meireles é um artista conceitual brasileiro, nascido em 1948, conhecido por obras que combinam crítica política e social com experimentação sensorial, como Inserções em Circuitos Ideológicos, Eureka/Blindhotland e Babel.",
+                fullBio: "Cildo Meireles, nascido no Rio de Janeiro em 1948, é um dos principais artistas conceituais brasileiros, conhecido por integrar crítica social e política em sua obra. Cresceu em Brasília durante a construção da capital, em contato com a arquitetura modernista, e iniciou sua carreira no final dos anos 1960, período marcado pela repressão da ditadura militar. Suas obras mais emblemáticas, como Inserções em Circuitos Ideológicos (1970–1975), utilizam objetos cotidianos, como dinheiro e garrafas de Coca-Cola, para veicular mensagens críticas, ampliando os limites da arte e desafiando o poder estabelecido. Além disso, Meireles desenvolveu instalações sensoriais, como Eureka/Blindhotland e Babel, que exploram percepção, espaço, som e comunicação. Seu trabalho está presente em importantes coleções internacionais, como Tate Modern e MoMA, consolidando sua influência na arte contemporânea.",
+                anoNascimento: 1948
+            },
+            {
+                nome: "Tunga",
+                foto: "assets/tunga.png",
+                shortBio: "Tunga (1952–2016) foi um artista brasileiro reconhecido por suas esculturas e instalações que combinam materiais diversos e referências mitológicas, científicas e eróticas, deixando um legado de experimentação e poética intensa.",
+                fullBio: "Tunga, nome artístico de Antônio José de Barros Carvalho e Mello Mourão, nasceu em 1952, em Palmares, Pernambuco, e cresceu em um ambiente intelectual, filho do poeta Gerardo Mello Mourão. Estudou Arquitetura e Urbanismo no Rio de Janeiro, mas dedicou-se à arte, tornando-se escultor, desenhista, performer e criador de instalações. A partir dos anos 1970, passou a expor no Brasil e no exterior, desenvolvendo obras que combinam materiais diversos — como ímãs, ossos, vidro, líquidos e metais — e uma poética que mistura mitologia, alquimia, erotismo e ciência. Entre suas criações mais conhecidas está True Rouge, instalação que sugere sangue e vitalidade, e em 2005 foi o primeiro artista contemporâneo a ocupar o Louvre com À la Lumière des Deux Mondes. Tunga faleceu em 2016, deixando um legado marcado pela experimentação, ritualismo e profundidade conceitual.",
+                anoNascimento: 1952
+            }
+        ];
+
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let filteredArtists = [...artistsData];
+        let currentArtistIndex = 0;
+
+        // ==================== ELEMENTOS DO DOM ====================
+        const gallery = document.getElementById('gallery');
+        const modal = document.getElementById('modal');
+        const modalImage = document.getElementById('modalImage');
+        const modalName = document.getElementById('modalName');
+        const modalYear = document.getElementById('modalYear');
+        const modalBio = document.getElementById('modalBio');
+        const modalClose = document.getElementById('modalClose');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const themeToggle = document.getElementById('themeToggle');
+        const emptyState = document.getElementById('emptyState');
+        const prevButton = document.getElementById('prevArtist');
+        const nextButton = document.getElementById('nextArtist');
+
+        // ==================== FUNÇÕES DE RENDERIZAÇÃO ====================
+        
+        // Renderiza os cards dos artistas na galeria
+        function renderGallery(artists = filteredArtists) {
+            gallery.innerHTML = '';
+            
+            if (artists.length === 0) {
+                gallery.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            gallery.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            artists.forEach((artist, index) => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card__image-container">
+                        <img 
+                            src="${artist.foto}" 
+                            alt="Retrato de ${artist.nome}"
+                            class="card__image"
+                            loading="lazy"
+                        >
+                    </div>
+                    <div class="card__content">
+                        <h2 class="card__name">${artist.nome}</h2>
+                        <p class="card__year">${artist.anoNascimento}</p>
+                        <p class="card__bio">${artist.shortBio}</p>
+                        <button class="card__button" data-index="${index}" aria-label="Ver mais sobre ${artist.nome}">
+                            Ver mais
+                        </button>
+                    </div>
+                `;
+                
+                // Event listener para abrir modal
+                const button = card.querySelector('.card__button');
+                button.addEventListener('click', () => openModal(index));
+                
+                gallery.appendChild(card);
+            });
+        }
+
+        // ==================== MODAL ====================
+        
+        // Abre o modal com as informações completas do artista
+        function openModal(index) {
+            currentArtistIndex = index;
+            const artist = filteredArtists[index];
+            
+            modalImage.src = artist.foto;
+            modalImage.alt = `Retrato de ${artist.nome}`;
+            modalName.textContent = artist.nome;
+            modalYear.textContent = artist.anoNascimento;
+            modalBio.textContent = artist.fullBio;
+            
+            // Atualiza botões de navegação
+            prevButton.disabled = index === 0;
+            nextButton.disabled = index === filteredArtists.length - 1;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Foca no botão de fechar para acessibilidade
+            modalClose.focus();
+        }
+
+        // Fecha o modal
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Navega para o próximo artista
+        function nextArtist() {
+            if (currentArtistIndex < filteredArtists.length - 1) {
+                openModal(currentArtistIndex + 1);
+            }
+        }
+
+        // Navega para o artista anterior
+        function prevArtist() {
+            if (currentArtistIndex > 0) {
+                openModal(currentArtistIndex - 1);
+            }
+        }
+
+        // ==================== BUSCA E ORDENAÇÃO ====================
+        
+        // Filtra artistas por nome
+        function searchArtists(query) {
+            const lowerQuery = query.toLowerCase().trim();
+            filteredArtists = artistsData.filter(artist =>
+                artist.nome.toLowerCase().includes(lowerQuery)
+            );
+            renderGallery(filteredArtists);
+        }
+
+        // ==================== TEMA CLARO/ESCURO ====================
+        
+        // Alterna entre tema claro e escuro
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            // Salva preferência no localStorage
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Carrega tema salvo do localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        
+        // Busca
+        searchInput.addEventListener('input', (e) => {
+            searchArtists(e.target.value);
+        });
+
+        // Ordenação
+        sortSelect.addEventListener('change', (e) => {
+            sortArtists(e.target.value);
+        });
+
+        // Tema
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Modal - Fechar
+        modalClose.addEventListener('click', closeModal);
+        
+        // Fechar modal ao clicar fora do conteúdo
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Navegação do modal
+        prevButton.addEventListener('click', prevArtist);
+        nextButton.addEventListener('click', nextArtist);
+
+        // Teclas de atalho
+        document.addEventListener('keydown', (e) => {
+            if (modal.classList.contains('active')) {
+                switch(e.key) {
+                    case 'Escape':
+                        closeModal();
+                        break;
+                    case 'ArrowLeft':
+                        prevArtist();
+                        break;
+                    case 'ArrowRight':
+                        nextArtist();
+                        break;
+                }
+            }
+        });
+
+        // ==================== INICIALIZAÇÃO ====================
+        
+        // Carrega tema e renderiza galeria ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            renderGallery();
+        });
+    </script>
+</body>
+</html>
+
